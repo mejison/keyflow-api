@@ -6,11 +6,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Password reset route (required for API password reset emails)
+// Password reset route - redirect to frontend
 Route::get('/password/reset/{token}', function ($token) {
-    return response()->json([
-        'message' => 'This is an API endpoint. Use POST /api/v1/auth/reset-password with this token.',
-        'token' => $token,
-        'email' => request()->query('email'),
-    ]);
+    $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
+    $email = request()->query('email');
+    
+    // Redirect to frontend password reset page with token and email
+    return redirect()->away("{$frontendUrl}/reset-password?token={$token}&email=" . urlencode($email));
 })->name('password.reset');

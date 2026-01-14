@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\TypingTestController;
+use App\Http\Controllers\Api\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +49,11 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [TypingTestController::class, 'show']);
             Route::delete('/{id}', [TypingTestController::class, 'destroy']);
         });
+        
+        // User settings routes
+        Route::get('/settings', [UserSettingsController::class, 'index']);
+        Route::put('/settings', [UserSettingsController::class, 'update']);
+        Route::delete('/settings', [UserSettingsController::class, 'destroy']);
         
         // User's leaderboard rank (protected)
         Route::get('/leaderboard/my-rank', [LeaderboardController::class, 'myRank']);
