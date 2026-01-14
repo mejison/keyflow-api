@@ -1,0 +1,656 @@
+{
+  "info": {
+    "name": "KeyFlow API",
+    "description": "KeyFlow API with Authentication - Laravel Sanctum & Socialite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Check API health status"
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.access_token) {",
+                  "        pm.environment.set(\"access_token\", jsonData.data.access_token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a new user and receive access token"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.access_token) {",
+                  "        pm.environment.set(\"access_token\", jsonData.data.access_token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Login with email and password to receive access token"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            },
+            "description": "Get authenticated user information"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            },
+            "description": "Logout and revoke current access token"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "forgot-password"]
+            },
+            "description": "Request password reset link via email"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset_token_from_email\",\n  \"email\": \"test@example.com\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "reset-password"]
+            },
+            "description": "Reset password using token from email"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Social Authentication",
+      "item": [
+        {
+          "name": "Google - Redirect",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/social/google",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "social", "google"]
+            },
+            "description": "Redirects to Google OAuth authorization page. After authorization, Google will redirect to callback which then redirects to frontend with token."
+          }
+        },
+        {
+          "name": "Google - Callback (Manual Test)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/social/google/callback?code=test_authorization_code",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "social", "google", "callback"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "test_authorization_code",
+                  "description": "Replace with actual code from Google (automatically provided)"
+                }
+              ]
+            },
+            "description": "This endpoint is automatically called by Google. It redirects to: {FRONTEND_URL}/auth/callback/google?token={token}"
+          }
+        },
+        {
+          "name": "GitHub - Redirect",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/social/github",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "social", "github"]
+            },
+            "description": "Redirects to GitHub OAuth authorization page. After authorization, GitHub will redirect to callback which then redirects to frontend with token."
+          }
+        },
+        {
+          "name": "GitHub - Callback (Manual Test)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/social/github/callback?code=test_authorization_code",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "social", "github", "callback"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "test_authorization_code",
+                  "description": "Replace with actual code from GitHub (automatically provided)"
+                }
+              ]
+            },
+            "description": "This endpoint is automatically called by GitHub. It redirects to: {FRONTEND_URL}/auth/callback/github?token={token}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Typing Tests",
+      "item": [
+        {
+          "name": "Save Typing Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"wpm\": 75,\n  \"accuracy\": 94.5,\n  \"duration\": 60,\n  \"correct_words\": 120,\n  \"incorrect_words\": 5,\n  \"total_words\": 125,\n  \"text_content\": \"Sample typing test text...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests"]
+            },
+            "description": "Save a completed typing test"
+          }
+        },
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "statistics"]
+            },
+            "description": "Get user typing statistics"
+          }
+        },
+        {
+          "name": "Get Recent Activity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/recent-activity?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "recent-activity"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get recent typing test history"
+          }
+        },
+        {
+          "name": "Get Progress",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/progress?days=30",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "progress"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            },
+            "description": "Get typing progress over time"
+          }
+        },
+        {
+          "name": "Get Personal Bests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/personal-bests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "personal-bests"]
+            },
+            "description": "Get personal best records"
+          }
+        },
+        {
+          "name": "Get All Tests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests?per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            },
+            "description": "Get all typing tests (paginated)"
+          }
+        },
+        {
+          "name": "Get Single Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "1"]
+            },
+            "description": "Get a specific typing test by ID"
+          }
+        },
+        {
+          "name": "Delete Test",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/typing-tests/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "typing-tests", "1"]
+            },
+            "description": "Delete a typing test"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Top by WPM",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leaderboard/wpm?period=all&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leaderboard", "wpm"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "all",
+                  "description": "today, week, month, year, all"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Number of results (default 50)"
+                }
+              ]
+            },
+            "description": "Get leaderboard ranked by best WPM"
+          }
+        },
+        {
+          "name": "Top by Accuracy",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leaderboard/accuracy?period=all&limit=50&min_tests=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leaderboard", "accuracy"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "all"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "min_tests",
+                  "value": "5",
+                  "description": "Minimum tests to appear (default 5)"
+                }
+              ]
+            },
+            "description": "Get leaderboard ranked by average accuracy"
+          }
+        },
+        {
+          "name": "Top by Tests Taken",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leaderboard/tests?period=all&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leaderboard", "tests"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "all"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get leaderboard ranked by total tests taken"
+          }
+        },
+        {
+          "name": "Top Combined Score",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leaderboard/combined?period=all&limit=50&min_tests=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leaderboard", "combined"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "all"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "min_tests",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Get leaderboard ranked by combined score (WPM * Accuracy)"
+          }
+        },
+        {
+          "name": "My Rank",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leaderboard/my-rank?period=all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leaderboard", "my-rank"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "all"
+                }
+              ]
+            },
+            "description": "Get current user's rank in all leaderboards"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
